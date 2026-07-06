@@ -62,7 +62,7 @@ const localeRedirectScript = `(() => {
     if (!locale) return null;
     const normalized = String(locale).toLowerCase();
 
-    if (normalized === "zh" || normalized === "zh-cn" || normalized.startsWith("zh-hans")) {
+    if (normalized === "zh" || normalized.startsWith("zh-")) {
       return "zh-CN";
     }
 

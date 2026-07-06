@@ -4,7 +4,7 @@ import heroProductImage from "@/assets/edgeever-hero-product.png";
 import Link from "@/components/ui/link.astro";
 import { Icon } from "astro-icon/components";
 import { Meteors } from "@/components/magicui/meteors";
-import { getSiteLocale, siteCopy } from "@/i18n";
+import { getLocalizedPath, getSiteLocale, siteCopy } from "@/i18n";
 
 const locale = getSiteLocale(Astro.url.pathname);
 const copy = siteCopy[locale].hero;
@@ -45,7 +45,7 @@ const copy = siteCopy[locale].hero;
       </Link>
       <a
         rel="noopener"
-        href="/blog/ai-agent-deploy-cloudflare"
+        href={getLocalizedPath(locale, "/blog/ai-agent-deploy-cloudflare")}
         class="flex gap-2 items-center justify-center px-6 py-3 bg-white/50 backdrop-blur-sm border border-slate-200 hover:border-slate-300 rounded-xl text-slate-600 hover:text-brand-text transition-all text-sm font-medium hover:-translate-y-0.5"
         >
         <Icon class="w-5 h-5" name="bx:bxs-bot" />
