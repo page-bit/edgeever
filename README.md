@@ -71,9 +71,12 @@ Please refer to the [Cloudflare Manual Deployment Guide](docs/manual-deploy.md) 
 The automated helper commands are recommended. The template uses `admin` / `admin123` for the initial login, and the password can be changed later in Personal Settings. If you create the Cloudflare resources manually, finish configuring `.env.local`—including the D1 ID, R2 bucket, and the 400-day session limit—before running `bun run deploy`. Existing installations that use `EDGE_EVER_AUTH_PASSWORD_HASH` remain supported. Use that command only for first installation and emergency recovery; Workers Builds handles routine updates.
 
 
-## Multi-user Instances
+## Multi-Account Login
 
-The instance owner can create, disable, and reset member accounts in **Profile** -> **User accounts**. Public registration is disabled. Every member gets an isolated personal workspace, including notebooks, notes, attachments, Trash, imports/exports, and MCP tokens. Existing single-user installations are migrated automatically: all existing data remains in the original owner's default workspace. Cloudflare free-tier quotas are shared by the whole instance rather than allocated per user.
+Once deployed, a single instance supports multi-account login.
+
+The instance administrator can create, disable, or reset member accounts in **Profile** -> **User accounts**. Each member gets a fully isolated personal workspace, including notebooks, notes, attachments, Trash, import/export, and MCP tokens.
+
 
 ## PWA Installation
 
