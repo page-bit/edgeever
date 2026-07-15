@@ -98,6 +98,7 @@ const buildVariables = () => {
     "R2_BUCKET_NAME",
     "R2_PREVIEW_BUCKET_NAME",
     "AUTH_USERNAME",
+    "AUTH_PASSWORD",
     "AUTH_PASSWORD_HASH",
     "SESSION_TTL_DAYS",
     "DEMO_MODE",
@@ -115,13 +116,13 @@ const buildVariables = () => {
     if (current) entries.push([key, current]);
   }
 
-  if (!entries.some(([key]) => key.endsWith("AUTH_PASSWORD_HASH"))) {
-    throw new Error("Missing EDGE_EVER_AUTH_PASSWORD_HASH. Run deploy:setup before configuring Workers Builds.");
+  if (!entries.some(([key]) => key.endsWith("AUTH_PASSWORD") || key.endsWith("AUTH_PASSWORD_HASH"))) {
+    throw new Error("Missing EDGE_EVER_AUTH_PASSWORD or EDGE_EVER_AUTH_PASSWORD_HASH. Run deploy:setup before configuring Workers Builds.");
   }
 
   return Object.fromEntries(entries.map(([key, current]) => [key, {
     value: current.replace(/\\\$/g, "$"),
-    is_secret: key.endsWith("AUTH_PASSWORD_HASH"),
+    is_secret: key.endsWith("AUTH_PASSWORD") || key.endsWith("AUTH_PASSWORD_HASH"),
   }]));
 };
 

@@ -10,30 +10,37 @@
 
 严禁创建新的 Git 分支；所有修改、提交和推送都必须直接在 `main` 分支上完成。
 
-## Cloudflare 自动部署约束
+## GitHub Issue 与 Release 约束
 
-当用户要求“根据 GitHub 项目链接把本项目安装部署到 Cloudflare”时，应优先按 `docs/agent-deploy-cloudflare.md` 执行。
+正式版本遵循 Semantic Versioning。发布前检查最新 Release 和远端标签，选择未使用的版本号。Git 标签与 Release 标题必须完全一致，格式为 `vX.Y.Z`。
 
-推荐流程：
+Release 标签必须指向 `main` 上经过验证的发布提交；默认发布为非 Draft、非 Prerelease。发布正文使用以下结构：
 
-```sh
-bun install
-EDGE_EVER_PASSWORD='<首次登录密码>' bun run deploy:setup
-bun run deploy:doctor
-bun run deploy
+```md
+## 主要更新
+
+- 面向用户说明本次变化及影响。
+
+关联 Issue：#<issue-number>
+
+## 验证
+
+- 列出实际完成的测试、类型检查和构建结果。
 ```
 
-首次部署与验证成功后，应优先执行 `bun run deploy:builds:setup`，按 `docs/cloudflare-workers-builds.md` 将该 Worker 连接到 Fork 的 `main` 分支，并将 `.env.local` 中的实例配置写入 Cloudflare Workers Builds 的 Build Variables/Secrets。只有 Cloudflare GitHub App 的浏览器授权和 Build Token 选择无法由 API 自动完成；应由 Agent 尽可能代办，并在需要用户确认时给出文档中的精确路径。之后 GitHub Sync fork 触发 Cloudflare 自动构建、执行 D1 migration 并发布；不要为此新增 GitHub Actions Worker 部署流程。
+每个功能或修复 Release 必须关联带有对应 Label 的 GitHub Issue；没有 Issue 时先创建。发布后在 Issue 中回链 Release，并按完成状态关闭。验证失败时不得发布正式 Release。
 
-如果用户没有提供首次登录密码，应只询问这一个必要信息，或在用户同意后生成随机密码。Cloudflare 授权、账号、D1/R2 资源、Worker 名称、自定义域名等私有配置必须来自用户环境、Cloudflare MCP/插件、Wrangler 登录态或 `.env.local`，严禁硬编码到仓库文件。
+## Cloudflare 自动部署约束
 
-部署脚本必须通过 `scripts/run-wrangler.mjs` 读取 `.env.local` 并生成临时 Wrangler 配置。不要直接修改 `wrangler.toml` 来写入个人 `database_id`、bucket 名称、Worker 名称或 route。
+当用户要求根据 GitHub 项目链接将本项目安装部署到 Cloudflare 时，必须先完整阅读并严格按照 `docs/agent-deploy-cloudflare.md` 执行。该文档是此部署流程的唯一操作规范；不要在本文件重复维护部署命令、密码配置或 Workers Builds 步骤。
 
 ## 本地启动约束
 
-本地预览或调试时，必须优先使用 `bun run dev` 启动完整开发环境，让 API 通过 `scripts/run-wrangler.mjs` 读取 `.env.local` 中的个性化实例配置。实例名称、D1/R2 资源、账号等本机私有配置均以 `.env.local` 为准，严禁在代理指令或代码中硬编码个人实例名。
+本地预览或调试时，必须优先使用 `bun run dev` 启动完整的纯本地开发环境。该命令使用本地 D1/R2 和固定演示种子，不得读取或连接 `.env.local` 中的远程个性化实例。
 
-除非用户明确要求只启动前端静态界面，否则不要单独运行 `bun run dev:web`；该命令不会启动 API，也不会保证读取 `.env.local` 中的实例配置，容易导致前端请求 `127.0.0.1:8787` 失败或误判环境。
+只有用户明确要求连接远程实例时，才能使用 `EDGE_EVER_INSTANCE=<实例名> bun run dev:remote`。实例名称、D1/R2 资源、账号等本机私有配置均以 `.env.local` 为准，严禁在代理指令或代码中硬编码个人实例名；禁止在未显式指定实例的情况下启动远程开发环境。
+
+除非用户明确要求只启动前端静态界面，否则不要单独运行 `bun run dev:web`；该命令不会启动 API，容易导致前端请求 `127.0.0.1:8787` 失败或误判环境。
 
 ## 组件复用与造轮子约束
 
