@@ -44,7 +44,7 @@ The public demo resets every Monday at 1:00 AM (China Standard Time) and restore
 
 ### Deploy with an AI Agent
 
-Copy this prompt into your AI coding assistant, such as Claude Code, Codex, Antigravity, Cursor, or Trae. It covers the first installation and the automatic-update setup:
+Copy this prompt into your AI coding assistant, such as Claude Code, Codex, OpenClaw, Antigravity, Cursor, or Trae. It covers the first installation and the automatic-update setup:
 
 **Recommendation:** Before deployment, configure GitHub and Cloudflare MCP servers, plugins, or other supported integrations for your AI Agent. This allows it to fork the repository, create the required Cloudflare resources, deploy the application, and connect the instance to Cloudflare Workers Builds.
 
